@@ -45,15 +45,22 @@ def k_medoids(distMatrix, interval, init_medoids):
 
 
 # ------------------------------------------------------
-# Puerto Madryn March 1-31 2016 Region 1
-## NN = 1
+# NN = 1
 
 # Import data
 dat = pd.read_feather('~/Projects/Anomalous-IUU-Events-World-Map/data/Argentina_5NN_region1_2017-12-30_2018-12-29.feather')
 
-# Day
-# NN = 1
-distMatrix, distArray = dm.d_matrix(dat, interval='day', NN=1)
+print("Calculating distance day-hour NN=5")
+distMatrix, distArray = dm.d_matrix(dat, interval='dayhour', NN=5)
+distMatrix = pd.DataFrame(distMatrix)
+distMatrix.columns = distMatrix.columns.astype(str)
+
+# Save file
+distMatrix.to_feather(
+    '~/Projects/Anomalous-IUU-Events-World-Map/data/dmat_Argentina_region1_NN5_day_2017-12-30_2018-12-29.feather')
+
+print("Calculating distance day-hour NN=1")
+distMatrix, distArray = dm.d_matrix(dat, interval='dayhour', NN=1)
 distMatrix = pd.DataFrame(distMatrix)
 distMatrix.columns = distMatrix.columns.astype(str)
 
@@ -62,13 +69,7 @@ distMatrix.to_feather(
     '~/Projects/Anomalous-IUU-Events-World-Map/data/dmat_Argentina_region1_NN1_day_2017-12-30_2018-12-29.feather')
 
 
-distMatrix, distArray = dm.d_matrix(dat, interval='day', NN=5)
-distMatrix = pd.DataFrame(distMatrix)
-distMatrix.columns = distMatrix.columns.astype(str)
 
-# Save file
-distMatrix.to_feather(
-    '~/Projects/Anomalous-IUU-Events-World-Map/data/dmat_Argentina_region1_NN5_day_2017-12-30_2018-12-29.feather')
 
 
 

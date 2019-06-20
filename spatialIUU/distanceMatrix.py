@@ -12,6 +12,8 @@ def d_matrix(dat, interval, NN=1):
     dat = dat[dat['NN'] <= NN]
     dat.loc[:, 'distance'] = np.log(1 + dat.loc[:, 'distance'])
 
+    dat.loc[:, 'year'] = pd.DatetimeIndex(dat['timestamp']).year
+    dat.loc[:, 'month'] = pd.DatetimeIndex(dat['timestamp']).month
     dat.loc[:, 'day'] = pd.DatetimeIndex(dat['timestamp']).day
     dat.loc[:, 'hour'] = pd.DatetimeIndex(dat['timestamp']).hour
 
@@ -21,7 +23,7 @@ def d_matrix(dat, interval, NN=1):
     max_hour = max(dat['hour'])
 
     if interval == 'day':
-        dat = dat.groupby(['vessel_A', 'day'], as_index=False)[
+        dat = dat.groupby(['vessel_A', 'year', 'month', 'day', 'hour'], as_index=False)[
             'distance'].mean()
         x = []
 
@@ -38,11 +40,11 @@ def d_matrix(dat, interval, NN=1):
         distArray = ssd.squareform(distMatrix)
 
     if interval == 'dayhour':
-        dat = dat.groupby(['vessel_A', 'day', 'hour'],
+        dat = dat.groupby(['vessel_A', 'year', 'month', 'day', 'hour'],
                           as_index=False)['distance'].mean()
         x = []
 
-        gb = dat.groupby(['day', 'hour'])['distance']
+        gb = dat.groupby(['year', 'month', 'day', 'hour'])['distance']
         lst = [gb.get_group(x) for x in gb.groups]
         x = []
         for i in range(len(lst)):
